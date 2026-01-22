@@ -1,0 +1,40 @@
+Problem 1: Pending Pets
+Images are in D:\Petpostedimages\ but frontend tries to load from regular /images/ URL.
+Fix: Use /images/pending/ URL instead!
+Problem 2: Adoption Requests
+The adoption_requests table probably doesn't have the pet's image stored in the pet_image column. It's NULL or empty!
+Fix: Copy image from pets table to adoption_requests table.
+
+🚀 Quick Fix Steps:
+Step 1: Run Diagnosis (2 min)
+Run IMAGE_DIAGNOSIS.sql in MySQL to see exactly what's wrong:
+
+What columns exist
+What image paths are stored
+If pet_image is NULL
+
+Step 2: Fix WebConfig.java (3 min)
+Make sure it serves images from BOTH folders:
+java// PENDING images
+registry.addResourceHandler("/images/pending/**")
+        .addResourceLocations("file:D:/Petpostedimages/");
+
+// APPROVED images
+registry.addResourceHandler("/images/**")
+        .addResourceLocations("file:D:/Adoptionpetimages/");
+Step 3: Fix Database (1 min)
+Copy pet images to adoption requests:
+sqlUPDATE adoption_requests ar
+JOIN pets p ON ar.pet_id = p.pet_id
+SET ar.pet_image = p.image_url
+WHERE ar.pet_image IS NULL OR ar.pet_image = '';
+Step 4: Fix Frontend URLs (2 min)
+PendingPetsAdmin.jsx:
+javascriptsrc={`${API_URL}/images/pending/${pet.imagePath}`}
+AdoptingRequests.jsx:
+javascriptsrc={`${API_URL}/images/${req.petImage}`}
+
+📋 Files You Need:
+
+IMAGE_DIAGNOSIS.sql - Run this FIRST to see the exact problem
+ADMIN_IMAGE_FIX.md - Complete step-by-step guide with all fixes
