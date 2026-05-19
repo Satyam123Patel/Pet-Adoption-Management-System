@@ -1,0 +1,35 @@
+.contact-link {
+  text-decoration: none;
+  color: #000;
+  font-size: 1.05rem;
+  transition: 0.3s ease;
+}
+
+.contact-item:hover .contact-link {
+  color: orange !important;
+  transform: translateX(4px);
+}
+
+.contact-item:hover i {
+  transform: scale(1.2);
+  transition: 0.3s ease;
+}
+
+.insta-icon{
+  color:#E1306C;
+}
+
+.envelope-icon{
+  color:#007bff;
+}
+
+.github-icon{
+  color:#000;
+
+}
+.phone-icon{
+  color:#28a745;
+}
+.linkedIn-icon{
+  color:#0A66C2;
+}
