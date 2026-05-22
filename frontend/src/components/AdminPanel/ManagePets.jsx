@@ -38,7 +38,7 @@ const ManagePets = () => {
     } catch (err) {
       console.error('❌ Failed to fetch pets:', err);
     } finally {
-      setLoading(false);
+      loading(false);
     }
   }, [token]);
 
@@ -97,7 +97,7 @@ const ManagePets = () => {
       formData.append('name', form.name);
       formData.append('category', form.category);
       formData.append('breed', form.breed);
-      formData.append('age', form.age);
+      formData.append('age', form.age); // Passed nicely as stringified decimal
       formData.append('gender', form.gender);
       formData.append('status', form.status);
       if (form.shelterId) formData.append('shelterId', form.shelterId);
@@ -285,11 +285,12 @@ const ManagePets = () => {
                     type="number"
                     min="0"
                     max="30"
+                    step="any" 
                     className="form-control"
                     value={form.age}
                     onChange={handleChange}
                     required
-                    placeholder="e.g. 3"
+                    placeholder="e.g. 1.5"
                   />
                 </div>
 
