@@ -3,6 +3,7 @@ package com.petadoption.controller;
 import com.petadoption.entity.Pet;
 import com.petadoption.repository.PetRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
@@ -20,6 +21,9 @@ public class PetController {
 
     @Autowired
     private org.springframework.core.io.ResourceLoader resourceLoader;
+
+    @Value("${spring.datasource.url}")
+    private String dbUrl;
 
     @GetMapping
     public ResponseEntity<List<Pet>> getAllPets() {
@@ -73,6 +77,7 @@ public class PetController {
             return ResponseEntity.ok(java.util.Map.of(
                 "message", "Upload process completed!",
                 "uploadedCount", count,
+                "dbUrl", dbUrl,
                 "logs", logs
             ));
         } catch (Exception e) {
