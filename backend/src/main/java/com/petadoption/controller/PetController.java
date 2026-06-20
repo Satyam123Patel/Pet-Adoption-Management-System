@@ -45,22 +45,28 @@ public class PetController {
             java.util.List<String> logs = new java.util.ArrayList<>();
             for (Pet pet : pets) {
                 String imgUrl = pet.getImage_url();
-                if (imgUrl != null && !imgUrl.startsWith("http")) {
+                if (imgUrl != null) {
+                    // Extract the filename from the URL if it is a full URL path
+                    String filename = imgUrl;
+                    if (imgUrl.contains("/")) {
+                        filename = imgUrl.substring(imgUrl.lastIndexOf("/") + 1);
+                    }
+
                     try {
-                        org.springframework.core.io.Resource resource = resourceLoader.getResource("classpath:static/images/" + imgUrl);
+                        org.springframework.core.io.Resource resource = resourceLoader.getResource("classpath:static/images/" + filename);
                         if (resource.exists()) {
                             byte[] bytes = org.springframework.util.StreamUtils.copyToByteArray(resource.getInputStream());
                             java.util.Map<?, ?> uploadResult = cloudinary.uploader().upload(bytes, com.cloudinary.utils.ObjectUtils.emptyMap());
                             String secureUrl = (String) uploadResult.get("secure_url");
                             pet.setImage_url(secureUrl);
                             petRepository.save(pet);
-                            logs.add("Uploaded " + pet.getName() + " to " + secureUrl);
+                            logs.add("Successfully uploaded " + pet.getName() + " to Cloudinary: " + secureUrl);
                             count++;
                         } else {
-                            logs.add("Resource not found for " + pet.getName() + " at static/images/" + imgUrl);
+                            logs.add("No local file found for " + pet.getName() + " (searched for " + filename + "), leaving as is.");
                         }
                     } catch (Exception ex) {
-                        logs.add("Error uploading " + pet.getName() + " image (" + imgUrl + "): " + ex.getMessage());
+                        logs.add("Error uploading " + pet.getName() + " (" + filename + "): " + ex.getMessage());
                     }
                 }
             }
