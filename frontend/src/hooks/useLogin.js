@@ -28,16 +28,16 @@ export const useLogin = () => {
         throw new Error(data.message || "Invalid email or password");
       }
 
-      // ✅ CREATE A SINGLE USER OBJECT (IMPORTANT)
+      // CREATE A SINGLE USER OBJECT (IMPORTANT)
       const userWithToken = {
         ...data.user,
         token: data.token,
       };
 
-      // ✅ STORE EVERYTHING TOGETHER
+      // STORE EVERYTHING TOGETHER
       localStorage.setItem("user", JSON.stringify(userWithToken));
 
-      // ✅ UPDATE AUTH CONTEXT (MATCHES AuthContext.jsx)
+      // UPDATE AUTH CONTEXT (MATCHES AuthContext.jsx)
       dispatch({
         type: "LOGIN",
         payload: userWithToken,

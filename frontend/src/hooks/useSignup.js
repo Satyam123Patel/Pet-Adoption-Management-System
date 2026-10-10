@@ -12,7 +12,7 @@ export const useSignup = () => {
     setSignupError(null);
 
     try {
-      // 🔥 Signup WITH OTP (backend verifies OTP)
+      // Signup WITH OTP (backend verifies OTP)
       const response = await fetch(
         `${import.meta.env.VITE_API_URL}/api/auth/signup`,
         {
@@ -35,17 +35,20 @@ export const useSignup = () => {
         throw new Error(data.message || "Signup failed");
       }
 
-      // ✅ Save user & token
-      localStorage.setItem("user", JSON.stringify(data.user));
+      // CREATE A SINGLE USER OBJECT (MATCHES useLogin.js)
+      const userWithToken = {
+        ...data.user,
+        token: data.token,
+      };
+
+      // STORE EVERYTHING TOGETHER
+      localStorage.setItem("user", JSON.stringify(userWithToken));
       localStorage.setItem("token", data.token);
 
-      // ✅ Update auth context
+      // UPDATE AUTH CONTEXT (MATCHES AuthContext.jsx)
       dispatch({
         type: "LOGIN",
-        payload: {
-          user: data.user,
-          token: data.token,
-        },
+        payload: userWithToken,
       });
 
       setSignupIsLoading(false);

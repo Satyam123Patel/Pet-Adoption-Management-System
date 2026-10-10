@@ -27,13 +27,13 @@ const Profile = () => {
     setErrors([]);
     setSuccMessage('');
 
-    // ✅ Build request body safely
+    // Build request body safely
     const bodyData = {
       name: tempValues.name,
       email: user.email,
     };
 
-    // ✅ Send newEmail ONLY if changed
+    // Send newEmail ONLY if changed
     if (tempValues.email !== user.email) {
       bodyData.newEmail = tempValues.email.toLowerCase();
     }
@@ -51,7 +51,7 @@ const Profile = () => {
         }
       );
 
-      // ✅ SAFE JSON PARSING (FIXES YOUR ERROR)
+      // SAFE JSON PARSING (FIXES YOUR ERROR)
       let data = {};
       const contentType = response.headers.get('content-type');
 
@@ -65,7 +65,7 @@ const Profile = () => {
         return;
       }
 
-      // ✅ Success
+      // Success
       setSuccMessage('Updated Successfully');
 
       const updatedUser = {
@@ -74,7 +74,7 @@ const Profile = () => {
         email: data.updatedUser?.email ?? user.email,
       };
 
-      // ✅ Update local UI state
+      // Update local UI state
       setEditValues({
         name: updatedUser.name,
         email: updatedUser.email,
@@ -87,13 +87,13 @@ const Profile = () => {
 
       setIsEditing(false);
 
-      // ✅ Update AuthContext
+      // Update AuthContext
       dispatch({
         type: 'LOGIN',
         payload: updatedUser,
       });
 
-      // ✅ Update localStorage
+      // Update localStorage
       localStorage.setItem('user', JSON.stringify(updatedUser));
 
     } catch (err) {

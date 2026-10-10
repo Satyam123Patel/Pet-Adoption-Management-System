@@ -150,7 +150,7 @@ const AdminLogin = () => {
 
                   {/* BACK LINK */}
                   <div className="text-center pt-3 border-top mt-4">
-                    <Link to="/login" className="text-decoration-none fw-semibold">
+                    <Link to="/auth" className="text-decoration-none fw-semibold">
                       <i className="bi bi-arrow-left me-2"></i>
                       Back to User Login
                     </Link>

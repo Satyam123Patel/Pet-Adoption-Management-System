@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { useAdminAuthContext } from '../../hooks/useAdminAuthContext'; // ✅ FIXED
+import { useAdminAuthContext } from '../../hooks/useAdminAuthContext'; // FIXED
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080';
 
 /**
- * ✅ Admin component to manage adoption requests
+ * Admin component to manage adoption requests
  * Expects data from JOIN query (user + pet details via FKs)
  */
 const AdoptionRequests = () => {
@@ -12,18 +12,18 @@ const AdoptionRequests = () => {
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
 
-  const { admin } = useAdminAuthContext(); // ✅ FIXED: Changed from user
-  const token = admin?.token; // ✅ FIXED: Changed from user?.token
+  const { admin } = useAdminAuthContext(); // FIXED: Changed from user
+  const token = admin?.token; // FIXED: Changed from user?.token
 
   const fetchRequests = useCallback(async () => {
     if (!token) {
-      console.error('❌ No token found');
+      console.error('No token found');
       setLoading(false);
       return;
     }
 
     try {
-      console.log('📡 Fetching pending adoption requests...');
+      console.log('Fetching pending adoption requests...');
 
       const response = await fetch(`${API_URL}/api/admin/adoptions/pending`, {
         headers: { 
@@ -37,12 +37,12 @@ const AdoptionRequests = () => {
       }
 
       const data = await response.json();
-      console.log('✅ Received data:', data);
+      console.log('Received data:', data);
 
       setRequests(Array.isArray(data) ? data : []);
 
     } catch (error) {
-      console.error('❌ Error fetching requests:', error);
+      console.error('Error fetching requests:', error);
       setRequests([]);
       alert('Failed to load adoption requests: ' + error.message);
     } finally {
@@ -60,7 +60,7 @@ const AdoptionRequests = () => {
     }
 
     try {
-      console.log('✅ Approving request ID:', id);
+      console.log('Approving request ID:', id);
 
       const response = await fetch(`${API_URL}/api/admin/adoptions/${id}/approve`, {
         method: 'PUT',
@@ -75,13 +75,13 @@ const AdoptionRequests = () => {
       }
 
       const result = await response.json();
-      console.log('✅ Approval result:', result);
+      console.log('Approval result:', result);
 
-      alert('✅ Adoption approved successfully!');
+      alert('Adoption approved successfully!');
       fetchRequests(); // Refresh list
 
     } catch (error) {
-      console.error('❌ Approve failed:', error);
+      console.error('Approve failed:', error);
       alert('Failed to approve adoption: ' + error.message);
     }
   };
@@ -92,7 +92,7 @@ const AdoptionRequests = () => {
     }
 
     try {
-      console.log('❌ Rejecting request ID:', id);
+      console.log('Rejecting request ID:', id);
 
       const response = await fetch(`${API_URL}/api/admin/adoptions/${id}/reject`, {
         method: 'PUT',
@@ -107,22 +107,25 @@ const AdoptionRequests = () => {
       }
 
       const result = await response.json();
-      console.log('✅ Rejection result:', result);
+      console.log('Rejection result:', result);
 
-      alert('❌ Adoption request rejected');
+      alert('Adoption request rejected');
       fetchRequests(); // Refresh list
 
     } catch (error) {
-      console.error('❌ Reject failed:', error);
+      console.error('Reject failed:', error);
       alert('Failed to reject adoption: ' + error.message);
     }
   };
 
-  const filtered = requests.filter(r =>
-    r.pet_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    r.user_email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    r.user_name?.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const filtered = requests.filter(r => {
+    const petName = r.pet_name || r.petName || '';
+    const userEmail = r.user_email || r.userEmail || '';
+    const userName = r.user_name || r.userName || '';
+    return petName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      userEmail.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      userName.toLowerCase().includes(searchTerm.toLowerCase());
+  });
 
   if (loading) {
     return (
@@ -171,114 +174,132 @@ const AdoptionRequests = () => {
         </div>
       ) : (
         <div className="row">
-          {filtered.map(req => (
-            <div className="col-12 mb-3" key={req.request_id}>
-              <div className="card shadow-sm">
-                <div className="card-body">
-                  <div className="row">
-                    {/* Pet Image */}
-                    <div className="col-md-3">
-                      <img
-                        src={req.pet_image || 'https://placehold.co/250x250?text=Pet'}
-                        alt={req.pet_name}
-                        className="img-fluid rounded"
-                        style={{ 
-                          maxHeight: '200px', 
-                          width: '100%',
-                          objectFit: 'cover' 
-                        }}
-                        onError={(e) => { 
-                          e.target.src = 'https://via.placeholder.com/250x250?text=No+Image'; 
-                        }}
-                      />
-                    </div>
+          {filtered.map(req => {
+            const reqId = req.request_id || req.requestId || req.id;
+            const petName = req.pet_name || req.petName || 'Unknown';
+            const petImage = req.pet_image || req.petImage || req.image_url || req.imageUrl || 'https://placehold.co/250x250?text=Pet';
+            const petCategory = req.pet_category || req.petCategory || req.category || 'N/A';
+            const petBreed = req.pet_breed || req.petBreed || req.breed || 'N/A';
+            const petAge = req.pet_age || req.petAge || req.age || 'N/A';
+            const userName = req.user_name || req.userName || req.name || 'N/A';
+            const userEmail = req.user_email || req.userEmail || req.email || 'N/A';
+            const livingSituation = req.living_situation || req.livingSituation || 'Not provided';
+            const previousExperience = req.previous_experience || req.previousExperience || 'Not provided';
+            const familyComposition = req.family_composition || req.familyComposition || 'Not provided';
+            const createdAt = req.created_at || req.createdAt;
+            const submittedDate = createdAt && !isNaN(new Date(createdAt).getTime())
+              ? new Date(createdAt).toLocaleString()
+              : 'Recently';
 
-                    {/* Request Details */}
-                    <div className="col-md-6">
-                      {/* Pet Info */}
-                      <h5 className="text-primary mb-2">
-                        <i className="bi bi-heart-fill me-2"></i>
-                        {req.pet_name}
-                      </h5>
-                      
-                      <div className="mb-3">
-                        <span className="badge bg-primary me-2">{req.pet_category}</span>
-                        <span className="badge bg-secondary me-2">{req.pet_breed}</span>
-                        <span className="badge bg-info">{req.pet_age} years</span>
+            return (
+              <div className="col-12 mb-3" key={reqId}>
+                <div className="card shadow-sm">
+                  <div className="card-body">
+                    <div className="row">
+                      {/* Pet Image */}
+                      <div className="col-md-3">
+                        <img
+                          src={petImage}
+                          alt={petName}
+                          className="img-fluid rounded"
+                          style={{ 
+                            maxHeight: '200px', 
+                            width: '100%',
+                            objectFit: 'cover' 
+                          }}
+                          onError={(e) => { 
+                            e.target.src = 'https://via.placeholder.com/250x250?text=No+Image'; 
+                          }}
+                        />
                       </div>
 
-                      <hr />
+                      {/* Request Details */}
+                      <div className="col-md-6">
+                        {/* Pet Info */}
+                        <h5 className="text-primary mb-2">
+                          <i className="bi bi-heart-fill me-2"></i>
+                          {petName}
+                        </h5>
+                        
+                        <div className="mb-3">
+                          <span className="badge bg-primary me-2">{petCategory}</span>
+                          <span className="badge bg-secondary me-2">{petBreed}</span>
+                          <span className="badge bg-info">{petAge} years</span>
+                        </div>
 
-                      {/* Adopter Info */}
-                      <h6 className="text-success mb-2">
-                        <i className="bi bi-person-fill me-2"></i>
-                        Adopter Information
-                      </h6>
-                      
-                      <div className="mb-2">
-                        <strong>Name:</strong> {req.user_name || 'N/A'}
-                      </div>
-                      <div className="mb-2">
-                        <strong>Email:</strong> {req.user_email || 'N/A'}
-                      </div>
-                      
-                      <hr />
+                        <hr />
 
-                      {/* Application Details */}
-                      <h6 className="text-info mb-2">
-                        <i className="bi bi-file-text me-2"></i>
-                        Application Details
-                      </h6>
+                        {/* Adopter Info */}
+                        <h6 className="text-success mb-2">
+                          <i className="bi bi-person-fill me-2"></i>
+                          Adopter Information
+                        </h6>
+                        
+                        <div className="mb-2">
+                          <strong>Name:</strong> {userName}
+                        </div>
+                        <div className="mb-2">
+                          <strong>Email:</strong> {userEmail}
+                        </div>
+                        
+                        <hr />
 
-                      <div className="mb-1">
-                        <strong>Living Situation:</strong>{' '}
-                        <span className="text-muted">
-                          {req.living_situation || 'Not provided'}
-                        </span>
-                      </div>
-                      
-                      <div className="mb-1">
-                        <strong>Previous Experience:</strong>{' '}
-                        <span className="text-muted">
-                          {req.previous_experience || 'Not provided'}
-                        </span>
-                      </div>
-                      
-                      <div className="mb-2">
-                        <strong>Family Composition:</strong>{' '}
-                        <span className="text-muted">
-                          {req.family_composition || 'Not provided'}
-                        </span>
+                        {/* Application Details */}
+                        <h6 className="text-info mb-2">
+                          <i className="bi bi-file-text me-2"></i>
+                          Application Details
+                        </h6>
+
+                        <div className="mb-1">
+                          <strong>Living Situation:</strong>{' '}
+                          <span className="text-muted">
+                            {livingSituation}
+                          </span>
+                        </div>
+                        
+                        <div className="mb-1">
+                          <strong>Previous Experience:</strong>{' '}
+                          <span className="text-muted">
+                            {previousExperience}
+                          </span>
+                        </div>
+                        
+                        <div className="mb-2">
+                          <strong>Family Composition:</strong>{' '}
+                          <span className="text-muted">
+                            {familyComposition}
+                          </span>
+                        </div>
+
+                        <p className="text-muted small mb-0">
+                          <i className="bi bi-clock me-1"></i>
+                          Submitted: {submittedDate}
+                        </p>
                       </div>
 
-                      <p className="text-muted small mb-0">
-                        <i className="bi bi-clock me-1"></i>
-                        Submitted: {new Date(req.created_at).toLocaleString()}
-                      </p>
-                    </div>
-
-                    {/* Action Buttons */}
-                    <div className="col-md-3 d-flex flex-column justify-content-center gap-2">
-                      <button
-                        className="btn btn-success btn-lg"
-                        onClick={() => approve(req.request_id)}
-                      >
-                        <i className="bi bi-check-circle me-2"></i>
-                        Approve
-                      </button>
-                      <button
-                        className="btn btn-danger btn-lg"
-                        onClick={() => reject(req.request_id)}
-                      >
-                        <i className="bi bi-x-circle me-2"></i>
-                        Reject
-                      </button>
+                      {/* Action Buttons */}
+                      <div className="col-md-3 d-flex flex-column justify-content-center gap-2">
+                        <button
+                          className="btn btn-success btn-lg"
+                          onClick={() => approve(reqId)}
+                        >
+                          <i className="bi bi-check-circle me-2"></i>
+                          Approve
+                        </button>
+                        <button
+                          className="btn btn-danger btn-lg"
+                          onClick={() => reject(reqId)}
+                        >
+                          <i className="bi bi-x-circle me-2"></i>
+                          Reject
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       )}
     </div>

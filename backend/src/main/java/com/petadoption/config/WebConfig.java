@@ -23,9 +23,9 @@ public class WebConfig implements WebMvcConfigurer {
                                                 "classpath:/static/images/")
                                 .setCachePeriod(3600);
 
-                System.out.println("✅ Image handler configured:");
-                System.out.println("✅   - User uploads: " + uploadDir);
-                System.out.println("✅   - Sample pets: classpath:/static/images/");
+                System.out.println("Image handler configured:");
+                System.out.println("  - User uploads: " + uploadDir);
+                System.out.println("  - Sample pets: classpath:/static/images/");
         }
 
         @Override

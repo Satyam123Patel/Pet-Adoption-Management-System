@@ -12,9 +12,9 @@ import { BrowserRouter } from "react-router-dom";
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    {/* 👤 USER AUTH CONTEXT */}
+    {/* USER AUTH CONTEXT */}
     <AuthContextProvider>
-      {/* 🛡️ ADMIN AUTH CONTEXT */}
+      {/* ADMIN AUTH CONTEXT */}
       <AdminAuthProvider>
         <BrowserRouter>
           <App />

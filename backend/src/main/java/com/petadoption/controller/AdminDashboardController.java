@@ -14,21 +14,21 @@ public class AdminDashboardController {
     @Autowired
     private JdbcTemplate jdbc;
 
-    // 1️⃣ Total users
+    // 1⃣ Total users
     @GetMapping("/users")
     public Map<String, Object> getTotalUsers() {
         Integer count = jdbc.queryForObject("SELECT COUNT(*) FROM users", Integer.class);
         return Map.of("count", count != null ? count : 0);
     }
 
-    // 2️⃣ Total pets (from pet table)
+    // 2⃣ Total pets (from pet table)
     @GetMapping("/pets")
     public Map<String, Object> getTotalPets() {
         Integer count = jdbc.queryForObject("SELECT COUNT(*) FROM pet WHERE status = 'available'", Integer.class);
         return Map.of("count", count != null ? count : 0);
     }
 
-    // 3️⃣ Total adoption requests (PENDING status only)
+    // 3⃣ Total adoption requests (PENDING status only)
     @GetMapping("/requests")
     public Map<String, Object> getTotalRequests() {
         Integer count = jdbc.queryForObject(
@@ -37,7 +37,7 @@ public class AdminDashboardController {
         return Map.of("count", count != null ? count : 0);
     }
 
-    // 4️⃣ Total adopted pets (APPROVED status)
+    // 4⃣ Total adopted pets (APPROVED status)
     @GetMapping("/adopted")
     public Map<String, Object> getAdoptedPets() {
         Integer count = jdbc.queryForObject(
@@ -46,7 +46,7 @@ public class AdminDashboardController {
         return Map.of("count", count != null ? count : 0);
     }
 
-    // 5️⃣ Pet type distribution (by category)
+    // 5⃣ Pet type distribution (by category)
     @GetMapping("/pet-types")
     public List<Map<String, Object>> getPetTypes() {
         return jdbc.query(
@@ -59,7 +59,7 @@ public class AdminDashboardController {
                 });
     }
 
-    // 6️⃣ Monthly adoption stats
+    // 6⃣ Monthly adoption stats
     @GetMapping("/monthly")
     public List<Map<String, Object>> getMonthlyStats() {
         return jdbc.query(

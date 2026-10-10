@@ -38,12 +38,11 @@ public class BackendApplication {
                 adminRepository.save(admin);
 
                 System.out.println("========================================");
-                System.out.println("✅ Admin seeded successfully!");
-                System.out.println("📧 Email: " + adminEmail);
-                System.out.println("🔐 Password: " + adminPassword);
+                System.out.println("Admin seeded successfully!");
+                System.out.println("Email: " + adminEmail);
                 System.out.println("========================================");
             } else {
-                System.out.println("✅ Admin already exists — skipping seed.");
+                System.out.println("Admin already exists — skipping seed.");
             }
         };
     }

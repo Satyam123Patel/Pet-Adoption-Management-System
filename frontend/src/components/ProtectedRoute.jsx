@@ -4,7 +4,7 @@ import { useAuthContext } from "../hooks/useAuthContext";
 const ProtectedRoute = ({ children }) => {
   const { user, isAuthReady } = useAuthContext();
 
-  // ⏳ WAIT until auth is restored
+  // WAIT until auth is restored
   if (!isAuthReady) return null;
 
   if (!user) {

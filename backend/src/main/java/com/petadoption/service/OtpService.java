@@ -54,16 +54,16 @@ public class OtpService {
             request.setBody(mail.build());
             Response response = sg.api(request);
 
-            System.out.println("✅ SendGrid Status: " + response.getStatusCode());
-            System.out.println("✅ SendGrid Body: " + response.getBody());
+            System.out.println("SendGrid Status: " + response.getStatusCode());
+            System.out.println("SendGrid Body: " + response.getBody());
 
             if (response.getStatusCode() >= 400) {
-                System.out.println("❌ SendGrid Error: " + response.getBody());
+                System.out.println("SendGrid Error: " + response.getBody());
                 throw new RuntimeException("SendGrid error: " + response.getBody());
             }
 
         } catch (IOException e) {
-            System.out.println("❌ IOException: " + e.getMessage());
+            System.out.println("IOException: " + e.getMessage());
             throw new RuntimeException("Failed to send OTP email", e);
         }
     }

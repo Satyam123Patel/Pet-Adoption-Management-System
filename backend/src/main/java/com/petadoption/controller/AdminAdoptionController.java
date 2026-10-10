@@ -71,11 +71,11 @@ public class AdminAdoptionController {
                     """;
 
             List<Map<String, Object>> requests = jdbcTemplate.queryForList(sql);
-            System.out.println("✅ Found " + requests.size() + " pending requests");
+            System.out.println("Found " + requests.size() + " pending requests");
             return ResponseEntity.ok(requests);
 
         } catch (Exception e) {
-            System.err.println("❌ Error: " + e.getMessage());
+            System.err.println("Error: " + e.getMessage());
             return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
         }
     }
@@ -102,11 +102,11 @@ public class AdminAdoptionController {
 
             sendAdoptionApprovalEmail(user, pet);
 
-            System.out.println("✅ Request approved and email sent");
+            System.out.println("Request approved and email sent");
             return ResponseEntity.ok(Map.of("message", "Approved successfully. Email sent to user."));
 
         } catch (Exception e) {
-            System.err.println("❌ Error: " + e.getMessage());
+            System.err.println("Error: " + e.getMessage());
             return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
         }
     }
@@ -125,7 +125,7 @@ public class AdminAdoptionController {
             String sql = "UPDATE pet SET status = 'available' WHERE id = ?";
             jdbcTemplate.update(sql, request.getPetId());
 
-            System.out.println("❌ Request rejected");
+            System.out.println("Request rejected");
             return ResponseEntity.ok(Map.of("message", "Rejected"));
 
         } catch (Exception e) {
@@ -187,13 +187,13 @@ public class AdminAdoptionController {
             HttpResponse<String> response = client.send(httpRequest, HttpResponse.BodyHandlers.ofString());
 
             if (response.statusCode() == 202) {
-                System.out.println("📧 Adoption approval email sent to: " + user.getEmail());
+                System.out.println("Adoption approval email sent to: " + user.getEmail());
             } else {
-                System.err.println("❌ SendGrid error: " + response.statusCode() + " - " + response.body());
+                System.err.println("SendGrid error: " + response.statusCode() + " - " + response.body());
             }
 
         } catch (Exception e) {
-            System.err.println("❌ Failed to send email: " + e.getMessage());
+            System.err.println("Failed to send email: " + e.getMessage());
             e.printStackTrace();
         }
     }

@@ -1,10 +1,12 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useAuthContext } from "../../hooks/useAuthContext";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
 function AdoptForm(props) {
   const { user } = useAuthContext();
+  const navigate = useNavigate();
 
   const [email, setEmail] = useState(user?.email || "");
   const [phoneNo, setPhoneNo] = useState("");
@@ -13,12 +15,18 @@ function AdoptForm(props) {
   const [familyComposition, setFamilyComposition] = useState("");
 
   const [formError, setFormError] = useState(false);
+  const [authError, setAuthError] = useState(false);
   const [ErrPopup, setErrPopup] = useState(false);
   const [SuccPopup, setSuccPopup] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (!user) {
+      setAuthError(true);
+      return;
+    }
 
     if (!email || !phoneNo || !livingSituation || !previousExperience || !familyComposition) {
       setFormError(true);
@@ -59,7 +67,7 @@ function AdoptForm(props) {
       }, 2000);
 
     } catch (err) {
-      console.error("❌ Adoption error:", err);
+      console.error("Adoption error:", err);
       setErrPopup(true);
       setSuccPopup(false);
     } finally {
@@ -96,6 +104,21 @@ function AdoptForm(props) {
               <p><b>Category:</b> {props.pet.category}</p>
             </div>
           </div>
+
+          {authError && (
+            <div className="alert alert-warning alert-dismissible fade show d-flex align-items-center justify-content-between flex-wrap gap-2">
+              <div>
+                <strong>Sign In Required:</strong> Please sign in or sign up first to submit an adoption application.
+              </div>
+              <button
+                type="button"
+                className="btn btn-warning btn-sm text-white fw-semibold"
+                onClick={() => navigate("/auth")}
+              >
+                Sign In / Sign Up
+              </button>
+            </div>
+          )}
 
           {formError && (
             <div className="alert alert-danger alert-dismissible fade show">

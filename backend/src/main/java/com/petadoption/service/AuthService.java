@@ -24,7 +24,7 @@ public class AuthService {
     @Autowired
     private JwtUtil jwtUtil;
 
-    // ✅ SIGNUP (NO OTP LOGIC HERE)
+    // SIGNUP (NO OTP LOGIC HERE)
     public Map<String, Object> signup(String name, String email, String password) {
         Map<String, Object> response = new HashMap<>();
 
@@ -39,7 +39,7 @@ public class AuthService {
         User user = new User();
         user.setName(name);
         user.setEmail(email);
-        user.setPassword(passwordEncoder.encode(password)); // 🔐 hash password
+        user.setPassword(passwordEncoder.encode(password)); // hash password
         user.setRole("USER");
 
         userRepository.save(user);

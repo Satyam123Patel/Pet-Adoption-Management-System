@@ -1,7 +1,7 @@
 package com.petadoption.dto;
 
 /**
- * ✅ DTO for adoption request submission
+ * DTO for adoption request submission
  * Frontend sends email (we convert to user_id in backend)
  */
 public class AdoptionRequestDTO {

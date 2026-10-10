@@ -96,25 +96,18 @@ public class AuthController {
         return response;
     }
 
-    // ================= ADMIN LOGIN (DEBUG VERSION) =================
+    // ================= ADMIN LOGIN =================
     @PostMapping("/admin/login")
     public Map<String, Object> adminLogin(@RequestBody Map<String, String> req) {
 
         String email = req.get("email");
         String password = req.get("password");
 
-        System.out.println("🔐 ========== ADMIN LOGIN DEBUG ==========");
-        System.out.println("📧 Email received: " + email);
-        System.out.println(
-                "🔑 Password received: " +
-                        (password != null ? "YES (length: " + password.length() + ")" : "NO"));
-
         Map<String, Object> response = new HashMap<>();
 
         Optional<Admin> adminOpt = adminRepository.findByEmail(email);
 
         if (adminOpt.isEmpty()) {
-            System.out.println("❌ Admin NOT FOUND in database for email: " + email);
             response.put("success", false);
             response.put("message", "Invalid credentials");
             return response;
@@ -122,30 +115,13 @@ public class AuthController {
 
         Admin admin = adminOpt.get();
 
-        System.out.println("✅ Admin FOUND in database:");
-        System.out.println("   - ID: " + admin.getAdminId());
-        System.out.println("   - Name: " + admin.getName());
-        System.out.println("   - Email: " + admin.getEmail());
-        System.out.println("   - Role: " + admin.getRole());
-        System.out.println("   - Password Hash: " + admin.getPasswordHash());
-        System.out.println(
-                "   - Hash Length: " +
-                        (admin.getPasswordHash() != null ? admin.getPasswordHash().length() : "NULL"));
-
         boolean passwordMatches = passwordEncoder.matches(password, admin.getPasswordHash());
 
-        System.out.println("🔍 Password matches: " + passwordMatches);
-
         if (!passwordMatches) {
-            System.out.println("❌ PASSWORD VERIFICATION FAILED");
-            System.out.println("   - Input password: " + password);
-            System.out.println("   - Stored hash: " + admin.getPasswordHash());
             response.put("success", false);
             response.put("message", "Invalid credentials");
             return response;
         }
-
-        System.out.println("✅ ========== LOGIN SUCCESSFUL ==========");
 
         String token = jwtUtil.generateToken(admin.getEmail(), "ADMIN");
 
@@ -159,27 +135,5 @@ public class AuthController {
                 "role", "ADMIN"));
 
         return response;
-    }
-
-    // ================= TEMPORARY - GENERATE HASH FOR TESTING =================
-    @GetMapping("/test/hash")
-    public Map<String, String> generateHash() { // http://localhost:8080/api/auth/test/generate-hash = after runnig the
-                                                // backedn go to thsi weebiste for generated hash value
-
-        String password = "admin123";
-        String hash = passwordEncoder.encode(password);
-
-        System.out.println("🔐 ===== HASH GENERATION TEST =====");
-        System.out.println("Password: " + password);
-        System.out.println("Generated Hash: " + hash);
-        System.out.println("Hash Length: " + hash.length());
-
-        boolean matches = passwordEncoder.matches(password, hash);
-        System.out.println("Self-test matches: " + matches);
-
-        return Map.of(
-                "password", password,
-                "hash", hash,
-                "selfTest", String.valueOf(matches));
     }
 }

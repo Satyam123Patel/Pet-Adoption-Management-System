@@ -64,20 +64,31 @@ const Navbar = (props) => {
                     </li>
                 </ul>
 
-                {/* Username + Logout Button */}
-                    {user && (
-                    <li className="nav-item d-flex align-items-center">
-                        <span className="me-3 fw-semibold text-secondary">
-                        Welcome {user.name}!
-                        </span>
-                        <button
-                        onClick={handleLogout}
-                        className="btn btn-warning rounded-pill text-white btn-md align-items-center gap-2"
-                        >
-                        Logout
-                        </button>
-                    </li>
-                )}
+                {/* Auth Controls */}
+                <ul className="navbar-nav mb-2 mb-lg-0">
+                    {user ? (
+                        <li className="nav-item d-flex align-items-center">
+                            <span className="me-3 fw-semibold text-secondary">
+                                Welcome {user.name}!
+                            </span>
+                            <button
+                                onClick={handleLogout}
+                                className="btn btn-warning rounded-pill text-white btn-md align-items-center gap-2"
+                            >
+                                Logout
+                            </button>
+                        </li>
+                    ) : (
+                        <li className="nav-item d-flex align-items-center">
+                            <NavLink
+                                to="/auth"
+                                className="btn btn-warning rounded-pill text-white btn-md px-3 fw-bold shadow-sm"
+                            >
+                                Sign In / Sign Up
+                            </NavLink>
+                        </li>
+                    )}
+                </ul>
             </div>
         </div>
     </nav>
@@ -106,7 +117,7 @@ export default Navbar
 //     <nav className="navbar navbar-expand-lg navbar-light bg-light sticky-top">
 //       <div className="container-fluid">
 //         <Link className="navbar-brand" to="/">
-//           🐾 Pet Adoption
+//           Pet Adoption
 //         </Link>
         
 //         <button

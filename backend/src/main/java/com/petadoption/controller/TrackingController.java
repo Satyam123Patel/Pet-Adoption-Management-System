@@ -23,21 +23,21 @@ public class TrackingController {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    // ✅ Get all tracking records for a specific pet
+    // Get all tracking records for a specific pet
     @GetMapping("/pet/{petId}")
     public ResponseEntity<?> getTrackingByPetId(@PathVariable Long petId) {
         try {
             List<Tracking> trackingList = trackingRepository.findByPetIdOrderByUpdatedAtDesc(petId);
-            System.out.println("📋 Found " + trackingList.size() + " tracking records for pet ID: " + petId);
+            System.out.println("Found " + trackingList.size() + " tracking records for pet ID: " + petId);
             return ResponseEntity.ok(trackingList);
         } catch (Exception e) {
-            System.err.println("❌ Error: " + e.getMessage());
+            System.err.println("Error: " + e.getMessage());
             return ResponseEntity.badRequest()
                     .body(Map.of("error", "Failed to fetch tracking records: " + e.getMessage()));
         }
     }
 
-    // ✅ Get all adopted pets with their tracking info
+    // Get all adopted pets with their tracking info
     @GetMapping("/adopted-pets")
     public ResponseEntity<?> getAdoptedPetsWithTracking() {
         try {
@@ -60,16 +60,16 @@ public class TrackingController {
                     """;
 
             List<Map<String, Object>> pets = jdbcTemplate.queryForList(sql);
-            System.out.println("📋 Found " + pets.size() + " adopted pets with tracking info");
+            System.out.println("Found " + pets.size() + " adopted pets with tracking info");
             return ResponseEntity.ok(pets);
         } catch (Exception e) {
-            System.err.println("❌ Error: " + e.getMessage());
+            System.err.println("Error: " + e.getMessage());
             return ResponseEntity.badRequest()
                     .body(Map.of("error", "Failed to fetch adopted pets: " + e.getMessage()));
         }
     }
 
-    // ✅ Add tracking record for a pet
+    // Add tracking record for a pet
     @PostMapping("/add")
     public ResponseEntity<?> addTrackingRecord(@RequestBody Map<String, Object> trackingData) {
         try {
@@ -95,20 +95,20 @@ public class TrackingController {
 
             trackingRepository.save(tracking);
 
-            System.out.println("✅ Tracking record added for pet ID: " + petId);
+            System.out.println("Tracking record added for pet ID: " + petId);
             return ResponseEntity.ok(Map.of(
                     "message", "Tracking record added successfully",
                     "trackingId", tracking.getTrackId()));
 
         } catch (Exception e) {
-            System.err.println("❌ Error: " + e.getMessage());
+            System.err.println("Error: " + e.getMessage());
             e.printStackTrace();
             return ResponseEntity.badRequest()
                     .body(Map.of("error", "Failed to add tracking record: " + e.getMessage()));
         }
     }
 
-    // ✅ Update tracking record
+    // Update tracking record
     @PutMapping("/update/{trackId}")
     public ResponseEntity<?> updateTrackingRecord(
             @PathVariable Integer trackId,
@@ -138,17 +138,17 @@ public class TrackingController {
             tracking.setUpdatedAt(LocalDateTime.now());
             trackingRepository.save(tracking);
 
-            System.out.println("✅ Tracking record updated: " + trackId);
+            System.out.println("Tracking record updated: " + trackId);
             return ResponseEntity.ok(Map.of("message", "Tracking record updated successfully"));
 
         } catch (Exception e) {
-            System.err.println("❌ Error: " + e.getMessage());
+            System.err.println("Error: " + e.getMessage());
             return ResponseEntity.badRequest()
                     .body(Map.of("error", "Failed to update tracking record: " + e.getMessage()));
         }
     }
 
-    // ✅ Delete tracking record
+    // Delete tracking record
     @DeleteMapping("/delete/{trackId}")
     public ResponseEntity<?> deleteTrackingRecord(@PathVariable Integer trackId) {
         try {
@@ -158,17 +158,17 @@ public class TrackingController {
             }
 
             trackingRepository.deleteById(trackId);
-            System.out.println("🗑️ Tracking record deleted: " + trackId);
+            System.out.println("Tracking record deleted: " + trackId);
             return ResponseEntity.ok(Map.of("message", "Tracking record deleted successfully"));
 
         } catch (Exception e) {
-            System.err.println("❌ Error: " + e.getMessage());
+            System.err.println("Error: " + e.getMessage());
             return ResponseEntity.badRequest()
                     .body(Map.of("error", "Failed to delete tracking record: " + e.getMessage()));
         }
     }
 
-    // ✅ Get vaccination statistics
+    // Get vaccination statistics
     @GetMapping("/stats/vaccination")
     public ResponseEntity<?> getVaccinationStats() {
         try {
@@ -188,7 +188,7 @@ public class TrackingController {
         }
     }
 
-    // ✅ Get recent tracking activities
+    // Get recent tracking activities
     @GetMapping("/recent")
     public ResponseEntity<?> getRecentActivities(@RequestParam(defaultValue = "10") int limit) {
         try {

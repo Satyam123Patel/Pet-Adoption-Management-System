@@ -49,7 +49,7 @@ const PetCard = ({
       setShowSuccess(true);
       if (updateCards) updateCards();
     } catch (error) {
-      console.error('❌ Delete failed:', error);
+      console.error('Delete failed:', error);
       setShowError(true);
     } finally {
       setIsDeleting(false);

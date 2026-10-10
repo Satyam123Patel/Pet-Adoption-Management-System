@@ -13,7 +13,7 @@ import java.util.Map;
 @Component
 public class JwtUtil {
 
-    // 🔐 Secret key injected from application.properties
+    // Secret key injected from application.properties
     @Value("${app.jwt.secret}")
     private String SECRET;
 

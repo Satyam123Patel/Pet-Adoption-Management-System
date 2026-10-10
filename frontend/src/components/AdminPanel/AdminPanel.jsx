@@ -58,7 +58,7 @@ const AdminPanel = () => {
                 {admin?.name || 'Admin'}
               </button>
               <ul className="dropdown-menu dropdown-menu-end">
-                {/* ✅ ADD THIS: Go to Main Site Link in Dropdown */}
+                {/* ADD THIS: Go to Main Site Link in Dropdown */}
                 <li>
                   <Link to="/" className="dropdown-item">
                     <i className="bi bi-house-door me-2"></i>

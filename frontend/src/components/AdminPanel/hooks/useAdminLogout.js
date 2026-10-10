@@ -7,7 +7,7 @@ export const useAdminLogout = () => {
     const adminLogout = () => {
         localStorage.removeItem('admin');
         localStorage.removeItem('user'); // Also clear regular user data
-        dispatch({ type: 'LOGOUT' });
+        dispatch({ type: 'ADMIN_LOGOUT' });
     };
     
     return { adminLogout };

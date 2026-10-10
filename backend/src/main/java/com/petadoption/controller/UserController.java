@@ -12,6 +12,8 @@ import com.petadoption.service.FileStorageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -41,7 +43,7 @@ public class UserController {
     }
 
     // =========================
-    // ✅ GET AVAILABLE PETS
+    // GET AVAILABLE PETS
     // =========================
     @GetMapping("/pets")
     public ResponseEntity<List<Pet>> getAllApprovedPets() {
@@ -50,7 +52,7 @@ public class UserController {
     }
 
     // =========================
-    // ✅ SUBMIT PET FOR APPROVAL
+    // SUBMIT PET FOR APPROVAL
     // =========================
     @PostMapping(value = "/submit", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<String> submitPet(
@@ -80,36 +82,44 @@ public class UserController {
     }
 
     // =========================
-    // ✅ UPDATE USER PROFILE
+    // UPDATE USER PROFILE
     // (NAME + OPTIONAL EMAIL)
     // =========================
     @PutMapping("/update")
     public ResponseEntity<?> updateUserProfile(@RequestBody UpdateUserRequest request) {
 
-        System.out.println("👉 UPDATE REQUEST RECEIVED");
-        System.out.println("👉 Email (identifier): " + request.getEmail());
-        System.out.println("👉 Name: " + request.getName());
-        System.out.println("👉 New Email: " + request.getNewEmail());
+        System.out.println("UPDATE REQUEST RECEIVED");
+        System.out.println("Email (identifier): " + request.getEmail());
+        System.out.println("Name: " + request.getName());
+        System.out.println("New Email: " + request.getNewEmail());
 
         try {
-            // 🔎 Find user by current email
+            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+            String authenticatedEmail = (auth != null) ? auth.getName() : null;
+
+            if (authenticatedEmail != null && !authenticatedEmail.equalsIgnoreCase(request.getEmail())) {
+                return ResponseEntity.status(403).body(
+                        Map.of("error", "Unauthorized: You can only update your own profile"));
+            }
+
+            // Find user by current email
             User user = userRepository.findByEmail(request.getEmail())
                     .orElseThrow(() -> new RuntimeException("User not found"));
 
-            System.out.println("✅ USER FOUND: " + user.getEmail());
+            System.out.println("USER FOUND: " + user.getEmail());
 
-            // ✅ Update name if provided
+            // Update name if provided
             if (request.getName() != null && !request.getName().isBlank()) {
                 user.setName(request.getName());
-                System.out.println("✅ NAME UPDATED");
+                System.out.println("NAME UPDATED");
             }
 
-            // ✅ Update email ONLY if newEmail provided
+            // Update email ONLY if newEmail provided
             if (request.getNewEmail() != null && !request.getNewEmail().isBlank()) {
 
-                System.out.println("🔄 EMAIL UPDATE REQUESTED: " + request.getNewEmail());
+                System.out.println("EMAIL UPDATE REQUESTED: " + request.getNewEmail());
 
-                // 🚫 Prevent duplicate email
+                // Prevent duplicate email
                 if (!request.getNewEmail().equals(user.getEmail())
                         && userRepository.findByEmail(request.getNewEmail()).isPresent()) {
                     return ResponseEntity.badRequest().body(
@@ -117,14 +127,14 @@ public class UserController {
                 }
 
                 user.setEmail(request.getNewEmail());
-                System.out.println("✅ EMAIL UPDATED");
+                System.out.println("EMAIL UPDATED");
             }
 
-            // 💾 Save changes
+            // Save changes
             userRepository.save(user);
-            System.out.println("✅ USER SAVED SUCCESSFULLY");
+            System.out.println("USER SAVED SUCCESSFULLY");
 
-            // ✅ Always return JSON
+            // Always return JSON
             return ResponseEntity.ok(
                     Map.of(
                             "success", true,
@@ -133,8 +143,8 @@ public class UserController {
                                     "email", user.getEmail())));
 
         } catch (Exception e) {
-            System.out.println("❌ UPDATE FAILED");
-            e.printStackTrace(); // 🔥 shows real error in console
+            System.out.println("UPDATE FAILED");
+            e.printStackTrace(); // shows real error in console
 
             return ResponseEntity.status(500).body(
                     Map.of("error", "Failed to update profile"));

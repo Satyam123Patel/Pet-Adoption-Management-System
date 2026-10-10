@@ -36,7 +36,7 @@ const ManagePets = () => {
       const data = await res.json();
       setPets(Array.isArray(data) ? data : []);
     } catch (err) {
-      console.error('❌ Failed to fetch pets:', err);
+      console.error('Failed to fetch pets:', err);
     } finally {
       loading(false);
     }
@@ -49,7 +49,7 @@ const ManagePets = () => {
       const data = await res.json();
       setShelters(Array.isArray(data) ? data : []);
     } catch (err) {
-      console.error('❌ Failed to fetch shelters:', err);
+      console.error('Failed to fetch shelters:', err);
     }
   }, [token]);
 
@@ -117,11 +117,11 @@ const ManagePets = () => {
 
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
 
-      alert(editingPet ? '✅ Pet updated!' : '✅ Pet added!');
+      alert(editingPet ? 'Pet updated!' : 'Pet added!');
       setShowForm(false);
       fetchPets();
     } catch (err) {
-      console.error('❌ Submit failed:', err);
+      console.error('Submit failed:', err);
       alert('Failed to save pet. Check console.');
     } finally {
       setSubmitting(false);
@@ -140,10 +140,10 @@ const ManagePets = () => {
 
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
 
-      alert('🗑️ Pet deleted!');
+      alert('Pet deleted!');
       fetchPets();
     } catch (err) {
-      console.error('❌ Delete failed:', err);
+      console.error('Delete failed:', err);
       alert('Failed to delete pet.');
     }
   };
@@ -163,12 +163,12 @@ const ManagePets = () => {
   }, {});
 
   const categoryEmoji = {
-    dog: '🐶',
-    cat: '🐱',
-    bird: '🐦',
-    fish: '🐟',
-    rabbit: '🐰',
-    other: '🐾'
+    dog: '',
+    cat: '',
+    bird: '',
+    fish: '',
+    rabbit: '',
+    other: ''
   };
 
   if (loading) {
@@ -203,7 +203,7 @@ const ManagePets = () => {
             className="badge rounded-pill bg-light text-dark border"
             style={{ fontSize: '13px', padding: '6px 14px' }}
           >
-            {categoryEmoji[category] || '🐾'} {category} — {count}
+            {categoryEmoji[category] || ''} {category} — {count}
           </span>
         ))}
       </div>
@@ -213,7 +213,7 @@ const ManagePets = () => {
         <input
           type="text"
           className="form-control"
-          placeholder="🔍 Search by name, category, breed..."
+          placeholder="Search by name, category, breed..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
         />
@@ -224,7 +224,7 @@ const ManagePets = () => {
         <div className="card shadow-sm mb-4 border-primary">
           <div className="card-header bg-primary text-white d-flex justify-content-between">
             <h5 className="mb-0">
-              {editingPet ? `✏️ Edit Pet — ${editingPet.name}` : '➕ Add New Pet'}
+              {editingPet ? `Edit Pet — ${editingPet.name}` : 'Add New Pet'}
             </h5>
             <button className="btn-close btn-close-white" onClick={() => setShowForm(false)} />
           </div>
@@ -370,7 +370,7 @@ const ManagePets = () => {
                   >
                     {submitting
                       ? <><span className="spinner-border spinner-border-sm me-1" />Saving...</>
-                      : editingPet ? '💾 Update Pet' : '➕ Add Pet'
+                      : editingPet ? 'Update Pet' : 'Add Pet'
                     }
                   </button>
                 </div>
@@ -409,7 +409,7 @@ const ManagePets = () => {
                       src={pet.image_url || 'https://placehold.co/60x60?text=Pet'}
                       alt={pet.name}
                       style={{ width: 60, height: 60, objectFit: 'cover', borderRadius: 8 }}
-                      onError={(e) => { e.target.src = 'https://via.placeholder.com/60?text=🐾'; }}
+                      onError={(e) => { e.target.src = 'https://via.placeholder.com/60?text='; }}
                     />
                   </td>
                   <td className="fw-semibold">{pet.name}</td>
@@ -419,7 +419,7 @@ const ManagePets = () => {
                   <td>{pet.breed || '—'}</td>
                   <td>{pet.age} yrs</td>
                   <td>
-                    {pet.gender === 'M' ? '♂ Male' : pet.gender === 'F' ? '♀ Female' : 'Unknown'}
+                    {pet.gender === 'M' ? 'Male' : pet.gender === 'F' ? 'Female' : 'Unknown'}
                   </td>
                   <td>
                     <span className={`badge ${

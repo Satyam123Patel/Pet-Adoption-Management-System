@@ -255,4 +255,4 @@ UNION ALL SELECT 'Pending Pets:',   COUNT(*) FROM pets_pending
 UNION ALL SELECT 'Adoption Requests:', COUNT(*) FROM adoption_requests
 UNION ALL SELECT 'Tracking:',       COUNT(*) FROM tracking;
 
-SELECT '✅ Database setup completed successfully!' AS Status;
+SELECT 'Database setup completed successfully!' AS Status;

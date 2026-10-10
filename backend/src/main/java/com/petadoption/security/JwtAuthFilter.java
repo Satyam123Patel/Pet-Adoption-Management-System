@@ -25,13 +25,13 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) {
         String path = request.getServletPath();
-        System.out.println("🔍 FILTER CHECK PATH = " + path);
+        System.out.println("FILTER CHECK PATH = " + path);
 
-        // ✅ SKIP JWT FOR PUBLIC PATHS
+        // SKIP JWT FOR PUBLIC PATHS
         return path.startsWith("/api-auth")
                 || path.startsWith("/api/auth")
                 || path.startsWith("/api/otp")
-                || path.startsWith("/api/admin/login") // ✅ IMPORTANT
+                || path.startsWith("/api/admin/login") // IMPORTANT
                 || path.startsWith("/pets")
                 || path.startsWith("/adoptions")
                 || path.startsWith("/images")
@@ -48,7 +48,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             FilterChain filterChain)
             throws ServletException, IOException {
 
-        System.out.println("🔐 FILTER EXECUTING FOR = " + request.getServletPath());
+        System.out.println("FILTER EXECUTING FOR = " + request.getServletPath());
 
         String authHeader = request.getHeader("Authorization");
         String token = null;
@@ -57,12 +57,12 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             token = authHeader.substring(7);
         }
 
-        // ✅ Validate token only if present
+        // Validate token only if present
         if (token != null && jwtUtil.validateToken(token)) {
             String email = jwtUtil.extractUsername(token);
             String role = jwtUtil.extractRole(token);
 
-            System.out.println("✅ Token valid - Email: " + email + ", Role: " + role);
+            System.out.println("Token valid - Email: " + email + ", Role: " + role);
 
             SimpleGrantedAuthority authority = new SimpleGrantedAuthority("ROLE_" + role);
 

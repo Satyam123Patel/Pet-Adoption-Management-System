@@ -98,14 +98,14 @@ public class AdminPanelController {
             @RequestParam(value = "image", required = false) MultipartFile image) {
         try {
             System.out.println(
-                    "📥 Adding pet: " + name);
+                    "Adding pet: " + name);
 
             String imageUrl = null;
             if (image != null && !image.isEmpty()) {
                 imageUrl = cloudinaryService
                         .uploadImage(image);
                 System.out.println(
-                        "✅ Image uploaded: " + imageUrl);
+                        "Image uploaded: " + imageUrl);
             }
 
             String sql = "INSERT INTO pet (name, "
@@ -120,7 +120,7 @@ public class AdminPanelController {
 
         } catch (Exception e) {
             System.err.println(
-                    "❌ Failed: " + e.getMessage());
+                    "Failed: " + e.getMessage());
             return ResponseEntity.badRequest()
                     .body(Map.of("error",
                             "Failed to add pet: "
@@ -140,7 +140,7 @@ public class AdminPanelController {
             @RequestParam(value = "image", required = false) MultipartFile image) {
         try {
             System.out.println(
-                    "✏️ Updating pet ID: " + id);
+                    "Updating pet ID: " + id);
 
             if (image != null && !image.isEmpty()) {
                 String imageUrl = cloudinaryService
@@ -172,7 +172,7 @@ public class AdminPanelController {
         }
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping({ "/{id}", "/adopted/{id}" })
     public ResponseEntity<?> deletePet(
             @PathVariable Long id) {
         try {
@@ -327,17 +327,17 @@ public class AdminPanelController {
 
             if (response.statusCode() == 202) {
                 System.out.println(
-                        "📧 Email sent to: "
+                        "Email sent to: "
                                 + user.getEmail());
             } else {
                 System.err.println(
-                        "❌ SendGrid error: "
+                        "SendGrid error: "
                                 + response.statusCode());
             }
 
         } catch (Exception e) {
             System.err.println(
-                    "❌ Email failed: " + e.getMessage());
+                    "Email failed: " + e.getMessage());
         }
     }
 }

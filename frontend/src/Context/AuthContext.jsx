@@ -30,7 +30,7 @@ export const AuthContextProvider = ({ children }) => {
       });
     }
 
-    // ✅ auth restored
+    // auth restored
     setIsAuthReady(true);
   }, []);
 

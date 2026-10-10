@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAdminAuthContext } from "../../../hooks/useAdminAuthContext";
+import { useAdminAuthContext } from "./useAdminAuthContext";
 
 export const useAdminLogin = () => {
   const [error, setError] = useState(null);
@@ -32,7 +32,7 @@ export const useAdminLogin = () => {
         throw new Error(data.error || "Admin login failed");
       }
 
-      // ✅ BACKEND ALREADY RETURNS EVERYTHING
+      // BACKEND ALREADY RETURNS EVERYTHING
       const adminData = {
         id: data.id,
         name: data.name,
@@ -41,13 +41,13 @@ export const useAdminLogin = () => {
         token: data.token,
       };
 
-      // ✅ STORE ADMIN SEPARATELY
+      // STORE ADMIN SEPARATELY
       localStorage.setItem("admin", JSON.stringify(adminData));
 
-      // ✅ UPDATE ADMIN CONTEXT
+      // UPDATE ADMIN CONTEXT
       dispatch({ type: "ADMIN_LOGIN", payload: adminData });
 
-      // ✅ REDIRECT
+      // REDIRECT
       navigate("/admin-panel", { replace: true });
 
       return true;

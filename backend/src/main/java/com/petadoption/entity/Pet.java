@@ -19,7 +19,7 @@ public class Pet {
 	private String status = "available";
 
 	@Column(name = "image_url")
-	private String image_url; // ✅ Keep original field name
+	private String image_url; // Keep original field name
 
 	// Getters and Setters
 	public Long getId() {
@@ -78,7 +78,7 @@ public class Pet {
 		this.status = status;
 	}
 
-	// ✅ Both methods for backward compatibility
+	// Both methods for backward compatibility
 	public String getImage_url() {
 		return image_url;
 	}
@@ -87,7 +87,7 @@ public class Pet {
 		this.image_url = image_url;
 	}
 
-	// ✅ Java convention method (calls original)
+	// Java convention method (calls original)
 	public String getImageUrl() {
 		return image_url;
 	}

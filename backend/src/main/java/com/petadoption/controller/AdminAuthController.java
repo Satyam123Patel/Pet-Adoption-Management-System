@@ -32,12 +32,12 @@ public class AdminAuthController {
             String email = credentials.get("email");
             String password = credentials.get("password");
 
-            System.out.println("🔐 Admin login attempt for: " + email);
+            System.out.println("Admin login attempt for: " + email);
 
             Optional<Admin> adminOpt = adminRepository.findByEmail(email);
 
             if (!adminOpt.isPresent()) {
-                System.out.println("❌ Admin not found: " + email);
+                System.out.println("Admin not found: " + email);
                 return ResponseEntity.badRequest()
                         .body(Map.of("error", "Invalid credentials"));
             }
@@ -47,15 +47,15 @@ public class AdminAuthController {
             boolean passwordMatches = passwordEncoder.matches(password, admin.getPasswordHash());
 
             if (!passwordMatches) {
-                System.out.println("❌ Invalid password for: " + email);
+                System.out.println("Invalid password for: " + email);
                 return ResponseEntity.badRequest()
                         .body(Map.of("error", "Invalid credentials"));
             }
 
-            // ✅ Generate JWT token
+            // Generate JWT token
             String token = jwtUtil.generateToken(admin.getEmail(), "ADMIN");
 
-            System.out.println("✅ Admin logged in successfully: " + email);
+            System.out.println("Admin logged in successfully: " + email);
 
             Map<String, Object> response = new HashMap<>();
             response.put("id", admin.getAdminId());
@@ -67,7 +67,7 @@ public class AdminAuthController {
             return ResponseEntity.ok(response);
 
         } catch (Exception e) {
-            System.err.println("❌ Admin login error: " + e.getMessage());
+            System.err.println("Admin login error: " + e.getMessage());
             e.printStackTrace();
             return ResponseEntity.status(500)
                     .body(Map.of("error", "Login failed: " + e.getMessage()));
@@ -106,7 +106,7 @@ public class AdminAuthController {
             return ResponseEntity.ok(response);
 
         } catch (Exception e) {
-            System.err.println("❌ Token verification failed: " + e.getMessage());
+            System.err.println("Token verification failed: " + e.getMessage());
             return ResponseEntity.status(401)
                     .body(Map.of("error", "Unauthorized"));
         }

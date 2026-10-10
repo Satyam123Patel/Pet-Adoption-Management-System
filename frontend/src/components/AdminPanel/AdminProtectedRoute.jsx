@@ -1,22 +1,10 @@
 import { Navigate } from "react-router-dom";
 import { useAdminAuthContext } from "../../hooks/useAdminAuthContext";
-import { useEffect, useState } from "react";
 
 const AdminProtectedRoute = ({ children }) => {
-  const { admin } = useAdminAuthContext();
-  const [isChecking, setIsChecking] = useState(true);
+  const { admin, loading } = useAdminAuthContext();
 
-  useEffect(() => {
-    // Give context time to load from localStorage
-    const timer = setTimeout(() => {
-      setIsChecking(false);
-    }, 100);
-
-    return () => clearTimeout(timer);
-  }, []);
-
-  // Still checking - show nothing
-  if (isChecking) {
+  if (loading) {
     return (
       <div className="d-flex justify-content-center align-items-center min-vh-100">
         <div className="spinner-border text-primary" role="status">

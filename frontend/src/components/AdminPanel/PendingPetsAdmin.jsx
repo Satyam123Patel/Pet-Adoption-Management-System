@@ -9,7 +9,7 @@ const PendingPetsAdmin = () => {
   const [loading, setLoading] = useState(true);
 
   const { admin } = useAdminAuthContext();
-  const token = admin?.token; // ✅ FIXED: Changed from user?.token
+  const token = admin?.token; // FIXED: Changed from user?.token
 
   const fetchPending = useCallback(async () => {
     if (!token) {
@@ -27,7 +27,7 @@ const PendingPetsAdmin = () => {
       const data = await response.json();
       setPets(Array.isArray(data) ? data : []);
     } catch (error) {
-      console.error('❌ Error:', error);
+      console.error('Error:', error);
       setPets([]);
     } finally {
       setLoading(false);
@@ -46,10 +46,10 @@ const PendingPetsAdmin = () => {
         method: 'POST',
         headers: { Authorization: `Bearer ${token}` }
       });
-      alert('✅ Pet approved!');
+      alert('Pet approved!');
       fetchPending();
     } catch (error) {
-      console.error('❌ Approve failed:', error);
+      console.error('Approve failed:', error);
       alert('Failed to approve pet');
     }
   };
@@ -62,10 +62,10 @@ const PendingPetsAdmin = () => {
         method: 'POST',
         headers: { Authorization: `Bearer ${token}` }
       });
-      alert('❌ Pet rejected');
+      alert('Pet rejected');
       fetchPending();
     } catch (error) {
-      console.error('❌ Reject failed:', error);
+      console.error('Reject failed:', error);
       alert('Failed to reject pet');
     }
   };

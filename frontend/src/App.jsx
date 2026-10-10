@@ -60,33 +60,27 @@ const App = () => {
       <Route
         path="/"
         element={
-          <ProtectedRoute>
-            <Layout>
-              <Home />
-            </Layout>
-          </ProtectedRoute>
+          <Layout>
+            <Home />
+          </Layout>
         }
       />
 
       <Route
         path="/services"
         element={
-          <ProtectedRoute>
-            <Layout>
-              <Services />
-            </Layout>
-          </ProtectedRoute>
+          <Layout>
+            <Services />
+          </Layout>
         }
       />
 
       <Route
         path="/pets"
         element={
-          <ProtectedRoute>
-            <Layout>
-              <Pets />
-            </Layout>
-          </ProtectedRoute>
+          <Layout>
+            <Pets />
+          </Layout>
         }
       />
 
@@ -104,11 +98,9 @@ const App = () => {
       <Route
         path="/contact"
         element={
-          <ProtectedRoute>
-            <Layout>
-              <Contact />
-            </Layout>
-          </ProtectedRoute>
+          <Layout>
+            <Contact />
+          </Layout>
         }
       />
 

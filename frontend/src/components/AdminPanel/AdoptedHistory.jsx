@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { useAdminAuthContext } from '../../hooks/useAdminAuthContext'; // ✅ FIXED
+import { useAdminAuthContext } from '../../hooks/useAdminAuthContext'; // FIXED
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080';
 
@@ -7,8 +7,8 @@ const AdoptedHistory = () => {
   const [pets, setPets] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  const { admin } = useAdminAuthContext(); // ✅ FIXED: Changed from user to admin
-  const token = admin?.token; // ✅ FIXED: Get token from admin
+  const { admin } = useAdminAuthContext(); // FIXED: Changed from user to admin
+  const token = admin?.token; // FIXED: Get token from admin
 
   const fetchAdopted = useCallback(async () => {
     if (!token) {
@@ -26,7 +26,7 @@ const AdoptedHistory = () => {
       const data = await response.json();
       setPets(Array.isArray(data) ? data : []);
     } catch (error) {
-      console.error('❌ Error:', error);
+      console.error('Error:', error);
       setPets([]);
     } finally {
       setLoading(false);

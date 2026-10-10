@@ -37,7 +37,7 @@ public class PetSubmissionController {
 
         try {
             System.out.println(
-                    "📥 Receiving pet submission...");
+                    "Receiving pet submission...");
 
             // Validate inputs
             if (name == null || name.trim().isEmpty())
@@ -88,7 +88,7 @@ public class PetSubmissionController {
             // Upload to Cloudinary
             String imageUrl = cloudinaryService.uploadImage(file);
             System.out.println(
-                    "✅ Image uploaded: " + imageUrl);
+                    "Image uploaded: " + imageUrl);
 
             // Save to database
             PendingPets pendingPet = new PendingPets();
@@ -107,7 +107,7 @@ public class PetSubmissionController {
 
             PendingPets saved = pendingPetRepository.save(pendingPet);
             System.out.println(
-                    "✅ Pet saved with ID: " + saved.getId());
+                    "Pet saved with ID: " + saved.getId());
 
             Map<String, Object> response = new HashMap<>();
             response.put("message",
@@ -119,7 +119,7 @@ public class PetSubmissionController {
 
         } catch (Exception e) {
             System.err.println(
-                    "❌ Error: " + e.getMessage());
+                    "Error: " + e.getMessage());
             e.printStackTrace();
             return ResponseEntity.status(
                     HttpStatus.INTERNAL_SERVER_ERROR)

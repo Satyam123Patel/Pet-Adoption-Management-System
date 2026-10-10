@@ -18,11 +18,11 @@ const Dashboard = () => {
 
   const { admin } = useAdminAuthContext();
   const token = admin?.token;
-  const API = import.meta.env.VITE_API_URL;  // ✅ removed hardcoded fallback
+  const API = import.meta.env.VITE_API_URL;  // removed hardcoded fallback
 
   useEffect(() => {
     if (!token) {
-      console.error('❌ No admin token found');
+      console.error('No admin token found');
       setLoading(false);
       return;
     }
@@ -50,7 +50,7 @@ const Dashboard = () => {
           adopted: adopted.count || 0
         });
 
-        // ✅ removed console.log
+        // removed console.log
         setPetTypes(
           types.map((item, index) => ({
             name: item._id,
@@ -61,7 +61,7 @@ const Dashboard = () => {
 
         setMonthlyData(monthly);
       } catch (err) {
-        console.error('❌ Dashboard error:', err);
+        console.error('Dashboard error:', err);
       } finally {
         setLoading(false);
       }
@@ -101,7 +101,7 @@ const Dashboard = () => {
             <div className="card-header bg-white">
               <h5 className="mb-0">Pet Type Distribution</h5>
             </div>
-            {/* ✅ FIXED line 101 — added minHeight and overflow */}
+            {/* FIXED line 101 — added minHeight and overflow */}
             <div className="card-body" style={{ height: 300, minHeight: 300, overflow: 'hidden' }}>
               {petTypes.length > 0 && (
                 <ResponsiveContainer width="100%" height="100%">
@@ -125,7 +125,7 @@ const Dashboard = () => {
             <div className="card-header bg-white">
               <h5 className="mb-0">Monthly Activity</h5>
             </div>
-            {/* ✅ FIXED line 114 — added minHeight and overflow */}
+            {/* FIXED line 114 — added minHeight and overflow */}
             <div className="card-body" style={{ height: 300, minHeight: 300, overflow: 'hidden' }}>
               {monthlyData.length > 0 && (
                 <ResponsiveContainer width="100%" height="100%">

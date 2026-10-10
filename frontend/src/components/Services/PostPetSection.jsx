@@ -1,10 +1,12 @@
 //1
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { assets } from "../../assets/assets";
 import { useAuthContext } from "../../hooks/useAuthContext";
 
 const PostPetSection = () => {
   const { user } = useAuthContext();
+  const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
     name: "",
@@ -22,6 +24,7 @@ const PostPetSection = () => {
   const [fileName, setFileName] = useState("");
   const [formError, setFormError] = useState("");
   const [showPopup, setShowPopup] = useState(false);
+  const [showAuthModal, setShowAuthModal] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Pre-fill user data
@@ -84,6 +87,11 @@ const PostPetSection = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    if (!user) {
+      setShowAuthModal(true);
+      return;
+    }
+
     // Validate form
     const error = validateForm();
     if (error) {
@@ -108,7 +116,7 @@ const PostPetSection = () => {
       submitData.append("phone", formData.phone.trim());
       submitData.append("file", picture);
 
-      console.log("📤 Submitting pet for adoption...");
+      console.log("Submitting pet for adoption...");
 
       const response = await fetch(`${import.meta.env.VITE_API_URL}/pets/submit`, {
         method: "POST",
@@ -121,7 +129,7 @@ const PostPetSection = () => {
         throw new Error(data.error || data.details || "Failed to submit pet");
       }
 
-      console.log("✅ Pet submitted successfully:", data);
+      console.log("Pet submitted successfully:", data);
       setShowPopup(true);
 
       // Reset form
@@ -143,7 +151,7 @@ const PostPetSection = () => {
       setTimeout(() => setShowPopup(false), 5000);
 
     } catch (error) {
-      console.error("❌ Error:", error);
+      console.error("Error:", error);
       setFormError(error.message || "Failed to submit pet. Please try again.");
       window.scrollTo({ top: 0, behavior: 'smooth' });
     } finally {
@@ -171,7 +179,7 @@ const PostPetSection = () => {
         {/* ERROR MESSAGE */}
         {formError && (
           <div className="alert alert-danger alert-dismissible fade show">
-            <strong>⚠️ Error:</strong> {formError}
+            <strong>Error:</strong> {formError}
             <button
               type="button"
               className="btn-close"
@@ -183,12 +191,28 @@ const PostPetSection = () => {
         {/* SUCCESS MESSAGE */}
         {showPopup && (
           <div className="alert alert-success alert-dismissible fade show">
-            <strong>✅ Success!</strong> Pet submitted successfully! We'll review and contact you soon.
+            <strong>Success!</strong> Pet submitted successfully! We'll review and contact you soon.
             <button
               type="button"
               className="btn-close"
               onClick={() => setShowPopup(false)}
             ></button>
+          </div>
+        )}
+
+        {/* GUEST NOTICE */}
+        {!user && (
+          <div className="alert alert-warning d-flex align-items-center justify-content-between flex-wrap gap-2 mb-4">
+            <div>
+              <strong>Note:</strong> You can fill out this form, but you will need to sign in or create an account to submit.
+            </div>
+            <button
+              type="button"
+              className="btn btn-warning btn-sm text-white fw-semibold"
+              onClick={() => navigate("/auth")}
+            >
+              Sign In / Sign Up
+            </button>
           </div>
         )}
 
@@ -317,7 +341,7 @@ const PostPetSection = () => {
             />
             {fileName && (
               <small className="text-success d-block mt-1">
-                ✓ Selected: {fileName}
+                Selected: {fileName}
               </small>
             )}
           </div>
@@ -391,6 +415,46 @@ const PostPetSection = () => {
           </button>
         </div>
       </form>
+
+      {/* AUTH REQUIRED MODAL */}
+      {showAuthModal && (
+        <div className="modal show d-block" tabIndex="-1" style={{ backgroundColor: "rgba(0,0,0,0.5)" }}>
+          <div className="modal-dialog modal-dialog-centered">
+            <div className="modal-content shadow-lg border-0 rounded-4">
+              <div className="modal-header bg-warning text-white">
+                <h5 className="modal-title fw-bold">Sign In Required</h5>
+                <button
+                  type="button"
+                  className="btn-close btn-close-white"
+                  onClick={() => setShowAuthModal(false)}
+                ></button>
+              </div>
+              <div className="modal-body p-4 text-center">
+                <h5 className="mb-3">Posting a Pet for Adoption</h5>
+                <p className="text-muted mb-4">
+                  Please sign in or create an account to submit your pet for adoption.
+                </p>
+                <div className="d-flex justify-content-center gap-3">
+                  <button
+                    type="button"
+                    className="btn btn-warning rounded-pill text-white px-4 py-2 fw-semibold"
+                    onClick={() => navigate("/auth")}
+                  >
+                    Sign In / Sign Up
+                  </button>
+                  <button
+                    type="button"
+                    className="btn btn-outline-secondary rounded-pill px-4 py-2"
+                    onClick={() => setShowAuthModal(false)}
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </section>
   );
 };

@@ -36,12 +36,12 @@ public class AdoptionRequest {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
-    // ✅ ENUM
+    // ENUM
     public enum Status {
         PENDING, APPROVED, REJECTED
     }
 
-    // ✅ LIFECYCLE HOOKS
+    // LIFECYCLE HOOKS
     @PrePersist
     protected void onCreate() {
         createdAt = LocalDateTime.now();
@@ -113,12 +113,12 @@ public class AdoptionRequest {
         this.status = status;
     }
 
-    // ✅ Helper method to set status from String
+    // Helper method to set status from String
     public void setStatus(String status) {
         this.status = Status.valueOf(status.toUpperCase());
     }
 
-    // ✅ THIS METHOD WAS MISSING - ADD IT!
+    // THIS METHOD WAS MISSING - ADD IT!
     public String getStatusString() {
         return status.name();
     }

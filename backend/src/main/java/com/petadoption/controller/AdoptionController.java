@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.*;
 
 /**
- * ✅ PUBLIC ENDPOINT - User submits adoption requests
+ * PUBLIC ENDPOINT - User submits adoption requests
  * Converts email → user_id using FK relationship
  */
 @RestController
@@ -33,7 +33,7 @@ public class AdoptionController {
     private UserRepository userRepository;
 
     /**
-     * ✅ Submit adoption request
+     * Submit adoption request
      * 
      * Frontend sends: email, petId, living situation, etc.
      * Backend converts email → userId (via FK)
@@ -45,12 +45,12 @@ public class AdoptionController {
             @RequestBody AdoptionRequestDTO dto) {
 
         try {
-            System.out.println("📥 ===== ADOPTION REQUEST =====");
+            System.out.println("===== ADOPTION REQUEST =====");
             System.out.println("   Pet ID: " + petId);
             System.out.println("   User Email: " + dto.getEmail());
             System.out.println("   Phone: " + dto.getPhoneNo());
 
-            // ✅ Step 1: Verify pet exists and is available
+            // Step 1: Verify pet exists and is available
             Pet pet = petRepository.findById(petId)
                     .orElseThrow(() -> new RuntimeException("Pet not found with ID: " + petId));
 
@@ -59,21 +59,21 @@ public class AdoptionController {
                         "This pet is not available for adoption (current status: " + pet.getStatus() + ")");
             }
 
-            System.out.println("✅ Pet found: " + pet.getName() + " (Status: " + pet.getStatus() + ")");
+            System.out.println("Pet found: " + pet.getName() + " (Status: " + pet.getStatus() + ")");
 
-            // ✅ Step 2: Find user by email (to get user_id)
+            // Step 2: Find user by email (to get user_id)
             User user = userRepository.findByEmail(dto.getEmail())
                     .orElseThrow(() -> new RuntimeException("User not found. Please login or signup first."));
 
-            System.out.println("✅ User found: " + user.getName() + " (ID: " + user.getId() + ")");
+            System.out.println("User found: " + user.getName() + " (ID: " + user.getId() + ")");
 
-            // ✅ Step 3: Check if user already has pending request for this pet
+            // Step 3: Check if user already has pending request for this pet
             List<AdoptionRequest> existingRequests = adoptionRequestRepository
                     .findByPetIdAndStatus(petId, AdoptionRequest.Status.PENDING);
 
             for (AdoptionRequest req : existingRequests) {
                 if (req.getUserId().equals(user.getId())) {
-                    System.out.println("⚠️ User already has pending request for this pet");
+                    System.out.println("User already has pending request for this pet");
                     return ResponseEntity.badRequest()
                             .body(Map.of(
                                     "success", false,
@@ -82,27 +82,27 @@ public class AdoptionController {
                 }
             }
 
-            // ✅ Step 4: Create adoption request with FOREIGN KEYS
+            // Step 4: Create adoption request with FOREIGN KEYS
             AdoptionRequest request = new AdoptionRequest();
-            request.setUserId(user.getId()); // ✅ FK to users table
-            request.setPetId(petId); // ✅ FK to pet table
+            request.setUserId(user.getId()); // FK to users table
+            request.setPetId(petId); // FK to pet table
             request.setLivingSituation(dto.getLivingSituation());
             request.setPreviousExperience(dto.getPreviousExperience());
             request.setFamilyComposition(dto.getFamilyComposition());
             request.setStatus(AdoptionRequest.Status.PENDING);
 
-            // ✅ Step 5: Save request
+            // Step 5: Save request
             AdoptionRequest saved = adoptionRequestRepository.save(request);
-            System.out.println("✅ Request saved with ID: " + saved.getId());
+            System.out.println("Request saved with ID: " + saved.getId());
 
-            // ✅ Step 6: Update pet status to 'pending'
+            // Step 6: Update pet status to 'pending'
             pet.setStatus("pending");
             petRepository.save(pet);
-            System.out.println("✅ Pet status updated to: pending");
+            System.out.println("Pet status updated to: pending");
 
-            System.out.println("✅ ===== REQUEST COMPLETE =====");
+            System.out.println("===== REQUEST COMPLETE =====");
 
-            // ✅ Return success response
+            // Return success response
             return ResponseEntity.ok(Map.of(
                     "success", true,
                     "message", "Adoption request submitted successfully! We'll contact you soon.",
@@ -111,14 +111,14 @@ public class AdoptionController {
                     "status", "PENDING"));
 
         } catch (RuntimeException e) {
-            System.err.println("❌ Error: " + e.getMessage());
+            System.err.println("Error: " + e.getMessage());
             return ResponseEntity.badRequest()
                     .body(Map.of(
                             "success", false,
                             "error", e.getMessage()));
 
         } catch (Exception e) {
-            System.err.println("❌ Unexpected error: " + e.getMessage());
+            System.err.println("Unexpected error: " + e.getMessage());
             e.printStackTrace();
             return ResponseEntity.internalServerError()
                     .body(Map.of(
@@ -128,13 +128,13 @@ public class AdoptionController {
     }
 
     /**
-     * ✅ Get user's adoption requests
+     * Get user's adoption requests
      * Uses FK relationship to JOIN with pet table
      */
     @GetMapping("/user/{email}")
     public ResponseEntity<?> getUserRequests(@PathVariable String email) {
         try {
-            System.out.println("📋 Fetching adoption requests for: " + email);
+            System.out.println("Fetching adoption requests for: " + email);
 
             // Find user by email
             User user = userRepository.findByEmail(email)
@@ -144,9 +144,9 @@ public class AdoptionController {
             List<AdoptionRequest> requests = adoptionRequestRepository
                     .findByUserIdOrderByCreatedAtDesc(user.getId());
 
-            System.out.println("✅ Found " + requests.size() + " requests for user: " + user.getName());
+            System.out.println("Found " + requests.size() + " requests for user: " + user.getName());
 
-            // ✅ For each request, fetch pet details (simulating JOIN)
+            // For each request, fetch pet details (simulating JOIN)
             List<Map<String, Object>> enrichedRequests = new ArrayList<>();
 
             for (AdoptionRequest request : requests) {
@@ -177,14 +177,14 @@ public class AdoptionController {
             return ResponseEntity.ok(enrichedRequests);
 
         } catch (Exception e) {
-            System.err.println("❌ Error: " + e.getMessage());
+            System.err.println("Error: " + e.getMessage());
             return ResponseEntity.badRequest()
                     .body(Map.of("error", e.getMessage()));
         }
     }
 
     /**
-     * ✅ Get adoption request by ID
+     * Get adoption request by ID
      */
     @GetMapping("/{requestId}")
     public ResponseEntity<?> getRequestById(@PathVariable Long requestId) {

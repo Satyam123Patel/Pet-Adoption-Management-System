@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useAdminAuthContext } from '../../hooks/useAdminAuthContext'; // ✅ FIXED
+import { useAdminAuthContext } from '../../hooks/useAdminAuthContext'; // FIXED
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080';
 
@@ -32,7 +32,7 @@ const TrackingManagement = () => {
       const data = await response.json();
       setAdoptedPets(Array.isArray(data) ? data : []);
     } catch (error) {
-      console.error('❌ Error:', error);
+      console.error('Error:', error);
     } finally {
       setLoading(false);
     }
@@ -46,7 +46,7 @@ const TrackingManagement = () => {
       const data = await response.json();
       setTrackingRecords(Array.isArray(data) ? data : []);
     } catch (error) {
-      console.error('❌ Error:', error);
+      console.error('Error:', error);
     }
   };
 
@@ -82,13 +82,13 @@ const TrackingManagement = () => {
 
       if (!response.ok) throw new Error('Failed to add tracking record');
 
-      alert('✅ Tracking record added successfully!');
+      alert('Tracking record added successfully!');
       setShowAddForm(false);
       setFormData({ location: '', note: '', vetVisitDate: '', vaccinated: false });
       fetchTrackingRecords(selectedPet.id);
       fetchAdoptedPets();
     } catch (error) {
-      console.error('❌ Error:', error);
+      console.error('Error:', error);
       alert('Failed to add tracking record');
     }
   };
@@ -101,11 +101,11 @@ const TrackingManagement = () => {
         method: 'DELETE',
         headers: { Authorization: `Bearer ${token}` }
       });
-      alert('✅ Tracking record deleted');
+      alert('Tracking record deleted');
       fetchTrackingRecords(selectedPet.id);
       fetchAdoptedPets();
     } catch (error) {
-      console.error('❌ Error:', error);
+      console.error('Error:', error);
     }
   };
 

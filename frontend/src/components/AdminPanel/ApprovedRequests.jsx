@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { useAdminAuthContext } from '../../hooks/useAdminAuthContext'; // ✅ FIXED
+import { useAdminAuthContext } from '../../hooks/useAdminAuthContext'; // FIXED
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080';
 
@@ -8,8 +8,8 @@ const ApprovedRequests = () => {
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
 
-  const { admin } = useAdminAuthContext(); // ✅ FIXED: Changed from user
-  const token = admin?.token; // ✅ FIXED: Changed from user?.token
+  const { admin } = useAdminAuthContext(); // FIXED: Changed from user
+  const token = admin?.token; // FIXED: Changed from user?.token
 
   const fetchPets = useCallback(async () => {
     if (!token) {
@@ -27,7 +27,7 @@ const ApprovedRequests = () => {
       const data = await response.json();
       setPets(Array.isArray(data) ? data : []);
     } catch (error) {
-      console.error('❌ Error:', error);
+      console.error('Error:', error);
       setPets([]);
     } finally {
       setLoading(false);
@@ -46,10 +46,10 @@ const ApprovedRequests = () => {
         method: 'DELETE',
         headers: { Authorization: `Bearer ${token}` }
       });
-      alert('✅ Pet removed');
+      alert('Pet removed');
       fetchPets();
     } catch (error) {
-      console.error('❌ Delete error:', error);
+      console.error('Delete error:', error);
       alert('Failed to delete pet');
     }
   };
